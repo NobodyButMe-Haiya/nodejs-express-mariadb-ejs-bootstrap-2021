@@ -1,0 +1,16 @@
+{
+  "name": "crud_with_bootstrap",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "axios": "^0.23.0",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
+    "esm": "^3.2.25",
+    "lodash": "^4.17.21",
+    "mariadb": "^2.5.5",
+    "nodemon": "^2.0.14"
+  }
+}

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+  <title>Hello, Nodejs cum Express cum Mariadb cum Ejs !</title>
+</head>
+
+<body class="container-fluid">
+  <h1> Bootstrap 5.0 to Web API ? </h1>
+  <br />
+  <table class="table table-striped">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <td>
+          <input class="form-control" id="name" type="text" />
+        </td>
+        <td>
+          <input style="text-align: right" class="form-control" id="age" type="text" />
+        </td>
+        <td>
+          <button type="button" class="btn btn-success" onclick="createRecord()">
+            <i class="bi bi-plus-circle"></i>
+            NEW
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">NAME</th>
+        <th scope="col">AGE</th>
+        <th scope="col">ACTION</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <% data.forEach(function(row) { %>
+      <tr>
+        <th scope="row">
+          <%= row.personId ?>
+            </th>
+            <td>
+                <input class="form-control" id="<%= row.personId ?>_name" type="text"
+                       value="<%= row.name ?>"/>
+            </td>
+            <td>
+                <input style="text-align: right" class="form-control" id="<%= row.personId %>_age"
+          type="text" value="<?php echo $row["age"]; ?>"/>
+          </td>
+        <td>
+          <div class="btn-group" role="group" aria-label="Form Button">
+            <button type="button" class="btn btn-warning" onclick="updateRecord(<%= row.personId %>)">
+              <i class="bi bi-file-earmark-text"></i>
+              UPDATE
+            </button>
+            <button type="button" class="btn btn-danger" onclick="deleteRecord(<%= row.personId %>)">
+              <i class="bi bi-trash"></i>
+              DELETE
+            </button>
+          </div </td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    // at here we try to be native as possible and you can use url to ease change the which one you prefer
+    let url = "index.ejs";
+
+    function createRecord() {
+      const xmlHttpRequest = new XMLHttpRequest();
+      xmlHttpRequest.open("POST", url);
+      xmlHttpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xmlHttpRequest.onreadystatechange = function() {
+        if (xmlHttpRequest.readyState === 4) {
+          if (xmlHttpRequest.status === 200) {
+            console.log("Request 200 : " + xmlHttpRequest.responseText)
+            const obj = JSON.parse(xmlHttpRequest.responseText);
+            if (obj.code === 101) {
+              alert("Update sucess");
+              // append the dom first 
+              //console.log("Create Success")
+              //  window.location.href = "index.ejs?notification=createSuccess";
+            } else {
+              // popup saying error
+              console.log("error message : " + obj.message + "Error Code : " + obj.code)
+            }
+          } else {
+            console.log("Error", xmlHttpRequest.statusText);
+          }
+        }
+      }
+      xmlHttpRequest.send("&mode=create&name=" + document.getElementById("name").value + "&age=" + document.getElementById("age").value);
+
+    }
+
+    function updateRecord(personId) {
+      const xmlHttpRequest = new XMLHttpRequest();
+      xmlHttpRequest.open("POST", url);
+      xmlHttpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xmlHttpRequest.onreadystatechange = function() {
+        if (xmlHttpRequest.readyState === 4) {
+          if (xmlHttpRequest.status === 200) {
+            console.log("Request 200 : " + xmlHttpRequest.responseText)
+            const obj = JSON.parse(xmlHttpRequest.responseText);
+            if (obj.code === 301) {
+              // console.log("Update Success")
+              // window.location.href = "index.ejs?notification=updateSuccess";
+              alert("Update sucess");
+            } else {
+              // popup saying error
+              console.log("error message : " + obj.message + "Error Code : " + obj.code)
+            }
+
+          } else {
+            console.log("Error", xmlHttpRequest.statusText);
+          }
+        }
+      }
+      xmlHttpRequest.send("&mode=update&&personId=" + personId + "&name=" + document.getElementById(personId + "_name").value + "&age=" + document.getElementById(personId + "_age").value);
+
+    }
+
+    function deleteRecord(personId) {
+      const xmlHttpRequest = new XMLHttpRequest();
+      xmlHttpRequest.open("POST", url);
+      xmlHttpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xmlHttpRequest.onreadystatechange = function() {
+        if (xmlHttpRequest.readyState === 4) {
+          if (xmlHttpRequest.status === 200) {
+            console.log("Request 200 : " + xmlHttpRequest.responseText)
+            const obj = JSON.parse(xmlHttpRequest.responseText);
+            if (obj.code === 401) {
+              //console.log("Delete Success")
+              //window.location.href = "index.ejs?notification=deleteSuccess";
+              // direct remove the row 
+            } else {
+              // popup saying error
+              console.log("error message : " + obj.message + "Error Code : " + obj.code)
+            }
+          } else {
+            console.log("Error", xmlHttpRequest.statusText);
+          }
+        }
+      }
+      xmlHttpRequest.send("&mode=delete&personId=" + personId);
+
+    }
+  </script>
+</body>
+
+</html>
