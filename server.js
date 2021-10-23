@@ -1,9 +1,12 @@
-import express from 'express';
+//import express from 'express';
 import mariadb from 'mariadb';
 import lodash from 'lodash';
 import person from './Repository/person.js'
 
-var app = express();
+//var app = express();
+import  expresso from 'expresso-router';
+const app = expresso();
+
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }))
 app.listen(3000);
