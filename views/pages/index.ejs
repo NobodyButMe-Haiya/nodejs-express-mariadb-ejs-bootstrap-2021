@@ -12,11 +12,14 @@
 
   <title>Hello, Nodejs cum Express cum Mariadb cum Ejs !</title>
 </head>
-
+<%  if(notification != null) { %>
+  <br />
+  <div class="alert alert-info"> <%= notification %></div>
+  <% } %>  
 <body class="container-fluid">
   <h1> Bootstrap 5.0 to Ejs  ? </h1>
   <br />
-  <table class="table table-striped">
+  <table class="table table-striped" id="tableData">
     <thead class="table-light">
       <tr>
         <th>#</th>
@@ -85,10 +88,14 @@
             console.log("Request 200 : " + xmlHttpRequest.responseText)
             const obj = JSON.parse(xmlHttpRequest.responseText);
             if (obj.code === 101) {
-              alert("Update sucess");
+              alert("create sucess");
               // append the dom first 
               //console.log("Create Success")
-              //  window.location.href = "index.ejs?notification=createSuccess";
+              var notification = "Create Success";
+              window.location.href = "?notification="+notification;
+
+              
+
             } else {
               // popup saying error
               console.log("error message : " + obj.message + "Error Code : " + obj.code)
@@ -113,7 +120,8 @@
             const obj = JSON.parse(xmlHttpRequest.responseText);
             if (obj.code === 301) {
               // console.log("Update Success")
-              // window.location.href = "index.ejs?notification=updateSuccess";
+              var notification = "Update Success";
+              window.location.href = "?notification="+notification;
               alert("Update sucess");
             } else {
               // popup saying error
@@ -130,6 +138,7 @@
     }
 
     function deleteRecord(personId) {
+      console.log("uis");
       const xmlHttpRequest = new XMLHttpRequest();
       xmlHttpRequest.open("POST", url);
       xmlHttpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -138,9 +147,11 @@
           if (xmlHttpRequest.status === 200) {
             console.log("Request 200 : " + xmlHttpRequest.responseText)
             const obj = JSON.parse(xmlHttpRequest.responseText);
+            console.log(obj);
             if (obj.code === 401) {
               //console.log("Delete Success")
-              //window.location.href = "index.ejs?notification=deleteSuccess";
+              var notification = "Delete Success";
+              window.location.href = "?notification="+notification;
               // direct remove the row 
             } else {
               // popup saying error

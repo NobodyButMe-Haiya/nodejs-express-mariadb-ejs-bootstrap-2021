@@ -1,9 +1,4 @@
 
-var host = "localhost";
-var user = "youtuber";
-var database = "youtuber";
-var password = "123456";
-
 function createRecord(connection, request, response) {
   connection
     .then(conn => {
@@ -17,7 +12,7 @@ function createRecord(connection, request, response) {
           console.log("Insert id : " + result.insertId);
           console.log("warning status : " + result.warningStatus);
           conn.commit();
-          response.status(200).json({ "status": true, "message": "record inserted" });
+          response.status(200).json({ "status": true, "code": 101, "message": "record inserted", "insertId": result.insertId });
         })
         .catch((err) => {
           console.log(err.message);
@@ -38,7 +33,7 @@ function readRecord(connection, request, response) {
       return result;
     }).then((result) => {
       console.log("complete")
-      response.status(200).json({ "status": true, "a": "3", "data": result });
+      response.status(200).json({ "status": true, "data": result });
     })
     .catch(err => {
       response.status(200).json({ "status": false, "message": err.message });
@@ -57,10 +52,9 @@ function updateRecord(connection, request, response) {
         .then((result) => {
           // some data we want to aquire . 
           console.log("Affected Row : " + result.affectedRows);
-          console.log("Insert id : " + result.insertId);
           console.log("warning status : " + result.warningStatus);
           conn.commit();
-          response.status(200).json({ "status": true, "message": "record updated" });
+          response.status(200).json({ "status": true,"code": 301, "message": "record updated" });
         })
         .catch((err) => {
           console.log(err.message);
@@ -68,7 +62,7 @@ function updateRecord(connection, request, response) {
         })
     })
     .catch(err => {
-      response.status(200).json({ "status": false, "message": err.message });
+      response.status(200).json({ "status": false,  "message": err.message });
     });
 }
 function deleteRecord(connection, request, response) {
@@ -80,14 +74,13 @@ function deleteRecord(connection, request, response) {
           return conn.query("DELETE FROM person WHERE personId = ? ", [request.body.personId]);
 
         })
-        .then(() => {
+        .then((result) => {
           // some data we want to aquire . 
           console.log("Affected Row : " + result.affectedRows);
-          console.log("Insert id : " + result.insertId);
           console.log("warning status : " + result.warningStatus);
 
           conn.commit();
-          response.status(200).json({ "status": true, "message": "record deleted" });
+          response.status(200).json({ "status": true, "code": 401, "message": "record deleted" });
         })
         .catch((err) => {
           console.log(err.message);

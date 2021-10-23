@@ -33,11 +33,18 @@ app.get('/', function (request, response) {
       lodash.difference(result['meta']);
       return result;
     }).then((result) => {
-      console.log("complete")
 
-      response.render('pages/index', {
-        data: result
-      });
+      if (request.query.notification) {
+        response.render('pages/index', {
+          data: result,
+          notification: request.query.notification
+        });
+      } else {
+        response.render('pages/index', {
+          data: result,
+          notification: null
+        });
+      }
     })
     .catch(err => {
       response.status(200).json({ "status": false, "message": err.message });
