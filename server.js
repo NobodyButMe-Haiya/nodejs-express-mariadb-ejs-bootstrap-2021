@@ -1,12 +1,9 @@
-import express from 'express';
-
+import express  from 'express';
 import mariadb from 'mariadb';
-import { host, database, user, password } from './config';
 
-import createRecord from './Repository/createRecord';
-import readRecord from './Repository/readRecord';
-import updateRecord from './Repository/updateRecord';
-import deleteRecord from './Repository/deleteRecord';
+
+
+import  person from './Repository/person.js'
 
 var app = express();
 app.set('view engine', 'ejs');
@@ -17,10 +14,10 @@ app.get('/', function (request, response) {
 
   var result = "";
   mariadb.createConnection({
-    host: host,
-    database: database,
-    user: user,
-    password: password
+    host: process.env.host,
+    database: process.env.database,
+    user: process.env.user,
+    password: process.env.password
   })
     .then(conn => {
       result = conn.query("SELECT * FROM person ");
@@ -44,16 +41,16 @@ app.get('/', function (request, response) {
 app.post('/', function (request, response) {
   switch (request.body.mode) {
     case "create":
-      createRecord(request, response);
+      person.createRecord(mariadb,request, response);
       break;
     case "read":
-      readRecord(request, response);
+      person.readRecord(mariadb,request, response);
       break;
     case "update":
-      updateRecord(request, response);
+      person.updateRecord(mariadb,request, response);
       break;
     case "delete":
-      deleteRecord(request, response);
+      person.deleteRecord(mariadb,request, response);
       break;
     default:
       response.status(200).json({ "status": false, "message": "something wrong with routing " });

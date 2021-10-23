@@ -1,4 +1,4 @@
-import { config } from 'dotenv';
+import { config } from 'dotenv'
 config();
 export const host = process.env.host;
 export const database = process.env.database;
