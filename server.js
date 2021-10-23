@@ -1,32 +1,39 @@
-import express  from 'express';
+import express from 'express';
 import mariadb from 'mariadb';
-
-
-
-import  person from './Repository/person.js'
+import lodash from 'lodash';
+import person from './Repository/person.js'
 
 var app = express();
 app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: true }))
 app.listen(3000);
+
+var host = "localhost";
+var user = "youtuber";
+var database = "youtuber";
+var password = "123456";
+
+var connection = mariadb.createConnection({
+  host: host,
+  database: database,
+  user: user,
+  password: password
+});
 
 app.get('/', function (request, response) {
   // as usual we need to pre-load the data 
+  // check config 
+  // response.render('pages/test');
 
   var result = "";
-  mariadb.createConnection({
-    host: process.env.host,
-    database: process.env.database,
-    user: process.env.user,
-    password: process.env.password
-  })
+  connection
     .then(conn => {
       result = conn.query("SELECT * FROM person ");
       console.log(result);
-      _.difference(result['meta']);
+      lodash.difference(result['meta']);
       return result;
     }).then((result) => {
       console.log("complete")
-      response.status(200).json({ "status": true, "a": "3", "data": result });
 
       response.render('pages/index', {
         data: result
@@ -34,23 +41,28 @@ app.get('/', function (request, response) {
     })
     .catch(err => {
       response.status(200).json({ "status": false, "message": err.message });
+      response.render('pages/error', {
+        message: err.message
+      })
     });
 
 });
-
-app.post('/', function (request, response) {
+app.get('/api', function (request, response) {
+  response.render('pages/denied')
+});
+app.post('/api', function (request, response) {
   switch (request.body.mode) {
     case "create":
-      person.createRecord(mariadb,request, response);
+      person.createRecord(connection, request, response);
       break;
     case "read":
-      person.readRecord(mariadb,request, response);
+      person.readRecord(connection, request, response);
       break;
     case "update":
-      person.updateRecord(mariadb,request, response);
+      person.updateRecord(connection, request, response);
       break;
     case "delete":
-      person.deleteRecord(mariadb,request, response);
+      person.deleteRecord(connection, request, response);
       break;
     default:
       response.status(200).json({ "status": false, "message": "something wrong with routing " });

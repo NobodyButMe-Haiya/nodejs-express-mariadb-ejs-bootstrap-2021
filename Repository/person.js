@@ -1,10 +1,11 @@
-function createRecord(mariadb, request, response) {
-  mariadb({
-    host: process.env.host,
-    database: process.env.database,
-    user: process.env.user,
-    password: process.env.password
-  })
+
+var host = "localhost";
+var user = "youtuber";
+var database = "youtuber";
+var password = "123456";
+
+function createRecord(connection, request, response) {
+  connection
     .then(conn => {
       conn.beginTransaction()
         .then(() => {
@@ -27,14 +28,9 @@ function createRecord(mariadb, request, response) {
       response.status(200).json({ "status": false, "message": err.message });
     });
 }
-function readRecord(mariadb, request, response) {
+function readRecord(connection, request, response) {
   var result = "";
-  mariadb.createConnection({
-    host: process.env.host,
-    database: process.env.database,
-    user: process.env.user,
-    password: process.env.password
-  })
+  connection
     .then(conn => {
       result = conn.query("SELECT * FROM person ");
       console.log(result);
@@ -48,13 +44,8 @@ function readRecord(mariadb, request, response) {
       response.status(200).json({ "status": false, "message": err.message });
     });
 }
-function updateRecord(mariadb, request, response) {
-  mariadb.createConnection({
-    host: process.env.host,
-    database: process.env.database,
-    user: process.env.user,
-    password: process.env.password
-  })
+function updateRecord(connection, request, response) {
+  connection
     .then(conn => {
       conn.beginTransaction()
         .then(() => {
@@ -80,13 +71,8 @@ function updateRecord(mariadb, request, response) {
       response.status(200).json({ "status": false, "message": err.message });
     });
 }
-function deleteRecord(mariadb, request, response) {
-  mariadb.createConnection({
-    host: process.env.host,
-    database: process.env.database,
-    user: process.env.user,
-    password: process.env.password
-  })
+function deleteRecord(connection, request, response) {
+  connection
     .then(conn => {
       conn.beginTransaction()
         .then(() => {
