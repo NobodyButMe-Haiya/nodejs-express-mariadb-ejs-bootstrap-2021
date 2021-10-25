@@ -3,9 +3,8 @@ import mariadb from 'mariadb';
 import lodash from 'lodash';
 import person from './Repository/person.js'
 
-//var app = express();
-import  expresso from 'expresso-router';
-const app = expresso();
+var app = express();
+
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }))
