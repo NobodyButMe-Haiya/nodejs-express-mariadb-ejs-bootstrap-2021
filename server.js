@@ -1,4 +1,4 @@
-//import express from 'express';
+import express from 'express';
 import mariadb from 'mariadb';
 import lodash from 'lodash';
 import person from './Repository/person.js'
